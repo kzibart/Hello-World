@@ -1,18 +1,39 @@
-name: Deploy Card Game
+name: Deploy Arcade Game to GitHub Pages
+
 on:
   push:
-    branches: [main]
+    branches: [main] # Runs every time you push to your main branch
+
+permissions:
+  contents: write # Crucial: Gives the bot permission to create the gh-pages branch
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Install Pygbag
-        run: pip install pygbag
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11' # Pygbag likes 3.11/3.12 for stability
+
+      - name: Install Pygbag and Arcade
+        run: |
+          pip install pygbag arcade
+
       - name: Build Web Version
-        run: pygbag --build .
-      - name: Upload to GitHub Pages
+        # This creates the 'build/web' folder with your index.html
+        run: |
+          pygbag --build .
+
+      - name: Ensure main.py is in the Web Folder
+        # Pygbag sometimes misses the source file in the web output
+        run: |
+          cp main.py build/web/
+
+      - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: build/web
