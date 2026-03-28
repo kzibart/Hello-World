@@ -57,7 +57,7 @@ async def custom_site():
     while embed.counter()<0:
         await asyncio.sleep(.1)
 
-    main = appdir / "assets" / "main.py"
+    main = "assets/main.py"
 
     # TODO: test for window.webkitAudioContext and block aio loop until gesture if accessing media manager play
     # before a gesture is recorded ( touch or click )
