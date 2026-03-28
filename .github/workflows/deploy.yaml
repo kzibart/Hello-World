@@ -1,40 +1,38 @@
-name: Deploy Arcade Game to GitHub Pages
+name: Deploy Arcade Game
 
 on:
   push:
-    branches: [main] # Runs every time you push to your main branch
+    branches: [main]
 
 permissions:
-  contents: write # Crucial: Gives the bot permission to create the gh-pages branch
+  contents: write
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11' # Pygbag likes 3.11/3.12 for stability
+      - name: Install Pygbag
+        run: pip install pygbag arcade
 
-      - name: Install Pygbag and Arcade
+      - name: Build
+        # This creates the 'build/web' folder
+        run: pygbag --build --no_tar .
+
+      - name: The "Manual Override"
         run: |
-          pip install pygbag arcade
-
-      - name: Build Web Version
-        # This creates the 'build/web' folder with your index.html
-        run: |
-          pygbag --build .
-
-      - name: Ensure main.py is in the Web Folder
-        # Pygbag sometimes misses the source file in the web output
-        run: |
-          mkdir -p build/web/assets/
+          # 1. Force the 'friendly' BrowserFS link into the HTML
+          sed -i 's/cdn.jsdelivr.net/cdnjs.cloudflare.com\/ajax\/libs/g' build/web/index.html
+          
+          # 2. Force main.py into the root of the web folder
+          cp main.py build/web/
+          
+          # 3. If it looks for 'assets', give it what it wants
+          mkdir -p build/web/assets
           cp main.py build/web/assets/
 
-      - name: Deploy to GitHub Pages
+      - name: Push to Production
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: build/web
