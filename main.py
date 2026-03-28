@@ -149,29 +149,30 @@ class MyGame(arcade.Window):
         super().on_close()
 
 async def main():
-    game = MyGame()
-    game.setup()
-
-    # Optimized loop for both Windows and Pygbag
-    while game.visible:
-        game.dispatch_events()
-        game.on_draw()
-        game.flip()
+    window = MyGame()
+    window.setup()
+    
+    # This is the manual "Engine Room"
+    while not window.has_exit:
+        # 1. Process mouse/keyboard events
+        window.dispatch_events()
+        
+        # 2. Run your update logic (60 times a second)
+        window.on_update(1/60)
+        
+        # 3. Clear the screen and draw the cards
+        window.clear() # This is the missing piece that "unfreezes" the screen!
+        window.on_draw()
+        
+        # 4. Flip the buffer to show the new frame on your monitor
+        window.flip()
+        
+        # 5. Yield to the Browser/OS (Crucial for Pygbag)
         await asyncio.sleep(1/60)
+    window.close()
 
 if __name__ == "__main__":
-    # 1. Create the 'Load Module' (The Game Object)
-    game = MyGame()
-    
-    # 2. Initialize the 'Working Storage' (The Card List)
-    game.setup()
-
-    # 3. Choose the Operating Environment
-    # If we are NOT in a web browser (Running locally on your 9950X)
-    if not sys.platform == "emscripten":
-        # This is the GA (General Availability) Windows runner.
-        # It handles the 'X' button and events natively.
-        arcade.run()
-    else:
-        # If we ARE in a web browser, use the specialized async loop
+    try:
         asyncio.run(main())
+    except (KeyboardInterrupt, SystemExit):
+        pass
