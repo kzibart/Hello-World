@@ -26,7 +26,7 @@ jobs:
       - name: Build Web Version
         # This creates the 'build/web' folder with your index.html
         run: |
-          pygbag --build --no_tar .
+          pygbag --build .
 
       - name: Ensure main.py is in the Web Folder
         # Pygbag sometimes misses the source file in the web output
