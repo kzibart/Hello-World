@@ -26,12 +26,13 @@ jobs:
       - name: Build Web Version
         # This creates the 'build/web' folder with your index.html
         run: |
-          pygbag --build .
+          pygbag --build --no_tar .
 
       - name: Ensure main.py is in the Web Folder
         # Pygbag sometimes misses the source file in the web output
         run: |
-          cp main.py build/web/
+          mkdir -p build/web/assets/
+          cp main.py build/web/assets/
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
