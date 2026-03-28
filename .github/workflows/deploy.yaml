@@ -1,0 +1,19 @@
+name: Deploy Card Game
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Pygbag
+        run: pip install pygbag
+      - name: Build Web Version
+        run: pygbag --build .
+      - name: Upload to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build/web
+          branch: gh-pages
