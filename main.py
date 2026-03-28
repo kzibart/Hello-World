@@ -168,6 +168,7 @@ async def main():
         window.flip()
         
         # 5. Yield to the Browser/OS (Crucial for Pygbag)
+        print("Arcade is heartbeating")
         await asyncio.sleep(1/60)
     window.close()
 
