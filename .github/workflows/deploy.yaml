@@ -18,7 +18,7 @@ jobs:
 
       - name: Build
         # This creates the 'build/web' folder
-        run: pygbag --build --no_tar .
+        run: pygbag --build .
 
       - name: The "Manual Override"
         run: |
