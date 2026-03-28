@@ -15,6 +15,7 @@ DECK_POS_X = 200
 DECK_POS_Y = 200
 DECK_GRID_X = CARD_WIDTH / 4
 DECK_GRID_Y = CARD_HEIGHT / 4
+print("Got here!")
 
 class Card:
     def __init__(self, x, y, suit, value):
