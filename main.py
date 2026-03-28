@@ -149,28 +149,33 @@ class MyGame(arcade.Window):
         super().on_close()
 
 async def main():
-    window = MyGame()
-    window.setup()
+    print("Starting PYGBAG")
+    try:
+        window = MyGame()
+        window.setup()
     
-    # This is the manual "Engine Room"
-    while not window.has_exit:
-        # 1. Process mouse/keyboard events
-        window.dispatch_events()
-        
-        # 2. Run your update logic (60 times a second)
-        window.on_update(1/60)
-        
-        # 3. Clear the screen and draw the cards
-        window.clear() # This is the missing piece that "unfreezes" the screen!
-        window.on_draw()
-        
-        # 4. Flip the buffer to show the new frame on your monitor
-        window.flip()
-        
-        # 5. Yield to the Browser/OS (Crucial for Pygbag)
-        print("Arcade is heartbeating")
-        await asyncio.sleep(1/60)
-    window.close()
+        # This is the manual "Engine Room"
+        while not window.has_exit:
+            # 1. Process mouse/keyboard events
+            window.dispatch_events()
+            
+            # 2. Run your update logic (60 times a second)
+            window.on_update(1/60)
+            
+            # 3. Clear the screen and draw the cards
+            window.clear() # This is the missing piece that "unfreezes" the screen!
+            window.on_draw()
+            
+            # 4. Flip the buffer to show the new frame on your monitor
+            window.flip()
+            
+            # 5. Yield to the Browser/OS (Crucial for Pygbag)
+            print("Arcade is heartbeating")
+            await asyncio.sleep(1/60)
+        window.close()
+
+    except Exception as e:
+        print(f"CRITICAL ERROR: {e}")
 
 if __name__ == "__main__":
     try:
